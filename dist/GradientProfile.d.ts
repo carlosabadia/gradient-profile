@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface GradientProfileProps extends React.HTMLAttributes<HTMLDivElement> {
-    text: string | number;
+    seed: string | number;
     className?: string;
     availableColors?: string[];
 }

@@ -1,4 +1,3 @@
-import { cn } from 'clsx-for-tailwind';
 import React, { useMemo } from 'react';
 
 const PREDEFINED_COLORS = [
@@ -21,14 +20,14 @@ function simpleHashCode(str) {
 }
 
 export const GradientProfile = ({
-    text,
+    seed,
     className,
     availableColors = PREDEFINED_COLORS,
     ...restProps
 }) => {
-    const inputTextAsString = useMemo(() => String(text), [text]);
+    const inputSeedAsString = useMemo(() => String(seed), [seed]);
 
-    const seed = useMemo(() => simpleHashCode(inputTextAsString), [inputTextAsString]);
+    const hashedSeed = useMemo(() => simpleHashCode(inputSeedAsString), [inputSeedAsString]);
 
     const normalizedAvailableColors = useMemo(() => {
         return availableColors.length > 0 ? availableColors : PREDEFINED_COLORS;
@@ -36,10 +35,10 @@ export const GradientProfile = ({
 
     const { color1, color2 } = useMemo(() => {
         const numAvailable = normalizedAvailableColors.length;
-        const index1 = seed % numAvailable;
+        const index1 = hashedSeed % numAvailable;
         const c1 = normalizedAvailableColors[index1];
 
-        const secondarySeed = simpleHashCode(String(seed));
+        const secondarySeed = simpleHashCode(String(hashedSeed));
         let index2 = secondarySeed % numAvailable;
 
         if (index2 === index1) {
@@ -48,26 +47,21 @@ export const GradientProfile = ({
         const c2 = normalizedAvailableColors[index2];
 
         return { color1: c1, color2: c2 };
-    }, [normalizedAvailableColors, seed]);
+    }, [normalizedAvailableColors, hashedSeed]);
 
-    const shade1 = SHADES[seed % SHADES_COUNT];
-    const shade2Seed = simpleHashCode(String(seed));
+    const shade1 = SHADES[hashedSeed % SHADES_COUNT];
+    const shade2Seed = simpleHashCode(String(hashedSeed));
     const shade2 = SHADES[shade2Seed % SHADES_COUNT];
 
     const gradientStyle = useMemo(() => ({
         backgroundImage: `linear-gradient(to bottom, var(--${color1}-${shade1}), var(--${color2}-${shade2}))`,
     }), [color1, color2, shade1, shade2]);
 
-    const combinedClassName = cn(
-        "size-4 pointer-events-none",
-        className
-    );
-
     return React.createElement(
         "div",
         {
             style: gradientStyle,
-            className: combinedClassName,
+            className: className,
             role: "img",
             ...restProps
         }

@@ -1,2 +1,1 @@
-export { GradientProfile } from './GradientProfile';
-export type { GradientProfileProps } from './GradientProfile'; 
+export { GradientProfile } from './GradientProfile.js'; 

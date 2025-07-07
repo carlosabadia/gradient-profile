@@ -28,11 +28,13 @@ const GradientProfileComponent = ({
     const hash = simpleHashCode(seedStr);
 
     const colorCount = colors.length;
+    const goldenRatio = 2.618;
+
     const color1 = colors[hash % colorCount];
-    const color2 = colors[(hash + 1) % colorCount];
+    const color2 = colors[Math.floor((hash * goldenRatio) % colorCount)];
 
     const shade1 = SHADES[hash % SHADES.length];
-    const shade2 = SHADES[(hash + 1) % SHADES.length];
+    const shade2 = SHADES[Math.floor((hash * goldenRatio) % SHADES.length)];
 
     const gradientStyle = useMemo(() => ({
         backgroundImage: `linear-gradient(to bottom, var(--${color1}-${shade1}), var(--${color2}-${shade2}))`,

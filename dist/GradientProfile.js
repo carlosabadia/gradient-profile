@@ -46,4 +46,6 @@ const GradientProfileComponent = ({
     });
 };
 
-export const GradientProfile = React.memo(GradientProfileComponent); 
+export const GradientProfile = React.memo(GradientProfileComponent);
+
+export default GradientProfile; 

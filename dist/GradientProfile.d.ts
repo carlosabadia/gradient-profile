@@ -6,4 +6,6 @@ export interface GradientProfileProps extends React.HTMLAttributes<HTMLDivElemen
     availableColors?: string[];
 }
 
-export declare const GradientProfile: React.FC<GradientProfileProps>; 
+export declare const GradientProfile: React.FC<GradientProfileProps>;
+
+export default GradientProfile; 

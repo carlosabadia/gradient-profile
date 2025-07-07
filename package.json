@@ -1,0 +1,30 @@
+{
+    "name": "gradient-profile",
+    "version": "1.0.0",
+    "description": "A React component that generates gradient profile avatars based on text input",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "keywords": [
+        "react",
+        "component",
+        "gradient",
+        "profile",
+        "avatar",
+        "reflex"
+    ],
+    "author": "",
+    "license": "MIT",
+    "peerDependencies": {
+        "react": ">=16.8.0"
+    },
+    "dependencies": {
+        "clsx-for-tailwind": "^1.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/carlosabadia/gradient-profile.git"
+    }
+}

@@ -1,69 +1,62 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 
-const PREDEFINED_COLORS = [
-    "tomato", "ruby",
-    "crimson", "pink", "plum", "purple", "iris", "indigo", "blue",
+const COLORS = [
+    "tomato", "ruby", "crimson", "pink", "plum", "purple", "iris", "indigo", "blue",
     "cyan", "teal", "jade", "green", "grass", "brown", "orange", "sky", "mint",
     "lime", "yellow", "amber", "gold", "bronze",
 ];
 
 const SHADES = [9, 10, 11];
-const SHADES_COUNT = SHADES.length;
 
-function simpleHashCode(str) {
-    let hash = 0;
+function hash(str) {
+    let h = 0;
     for (let i = 0; i < str.length; i++) {
-        hash = (hash << 5) - hash + str.charCodeAt(i);
-        hash |= 0;
+        h = (h << 5) - h + str.charCodeAt(i);
+        h |= 0;
     }
-    return Math.abs(hash);
+    return Math.abs(h);
 }
 
-export const GradientProfile = ({
-    seed,
-    className,
-    availableColors = PREDEFINED_COLORS,
-    ...restProps
-}) => {
-    const inputSeedAsString = useMemo(() => String(seed), [seed]);
+/** @typedef {{
+ *   seed?: string | number,
+ *   className?: string,
+ *   availableColors?: string[],
+ * }} GradientProfileProps */
 
-    const hashedSeed = useMemo(() => simpleHashCode(inputSeedAsString), [inputSeedAsString]);
+/** @type {React.FC<GradientProfileProps>} */
+const GradientProfile = ({ seed, className, availableColors = COLORS, ...props }) => {
+    const style = useMemo(() => {
+        const h = hash(String(seed ?? 0));
+        const colors = availableColors?.length ? availableColors : COLORS;
 
-    const normalizedAvailableColors = useMemo(() => {
-        return availableColors.length > 0 ? availableColors : PREDEFINED_COLORS;
-    }, [availableColors]);
+        const i1 = h % colors.length;
+        let i2 = (h + 1) % colors.length;
+        if (i1 === i2) i2 = (i2 + 1) % colors.length;
 
-    const { color1, color2 } = useMemo(() => {
-        const numAvailable = normalizedAvailableColors.length;
-        const index1 = hashedSeed % numAvailable;
-        const c1 = normalizedAvailableColors[index1];
+        const color1 = colors[i1];
+        const color2 = colors[i2];
 
-        const secondarySeed = simpleHashCode(String(hashedSeed));
-        let index2 = secondarySeed % numAvailable;
-
-        if (index2 === index1) {
-            index2 = (index1 + 1) % numAvailable;
+        const shade1 = SHADES[h % SHADES.length];
+        let shade2 = SHADES[(h >> 8) % SHADES.length];
+        if (shade1 === shade2) {
+            shade2 = SHADES[(SHADES.indexOf(shade2) + 1) % SHADES.length];
         }
-        const c2 = normalizedAvailableColors[index2];
 
-        return { color1: c1, color2: c2 };
-    }, [normalizedAvailableColors, hashedSeed]);
+        return {
+            backgroundImage: `linear-gradient(to bottom, var(--${color1}-${shade1}), var(--${color2}-${shade2}))`
+        };
+    }, [seed, availableColors]);
 
-    const shade1 = SHADES[hashedSeed % SHADES_COUNT];
-    const shade2Seed = simpleHashCode(String(hashedSeed));
-    const shade2 = SHADES[shade2Seed % SHADES_COUNT];
-
-    const gradientStyle = useMemo(() => ({
-        backgroundImage: `linear-gradient(to bottom, var(--${color1}-${shade1}), var(--${color2}-${shade2}))`,
-    }), [color1, color2, shade1, shade2]);
-
-    return React.createElement(
-        "div",
-        {
-            style: gradientStyle,
-            className: className,
-            role: "img",
-            ...restProps
-        }
+    return (
+        <div
+            style={style}
+            className={className}
+            role="img"
+            aria-label={`Avatar for ${seed ?? 'default'}`}
+            {...props}
+        />
     );
-}; 
+};
+
+export { GradientProfile };
+export default memo(GradientProfile);

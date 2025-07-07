@@ -1,1 +1,1 @@
-export { GradientProfile } from './GradientProfile.js'; 
+export { GradientProfile, default } from './GradientProfile.js'; 

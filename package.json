@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "A React component that generates gradient profile avatars based on text input",
     "main": "dist/index.js",
+    "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
         "dist"
